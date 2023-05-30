@@ -1,24 +1,36 @@
 import streamlit as st
+import pandas as pd
+import numpy as np
 
-def criar_matriz(linhas, colunas):
-    matriz = []
-    for i in range(linhas):
-        linha = []
-        for j in range(colunas):
-            valor = int(input(f"Digite o valor para a posição [{i}][{j}]: "))
-            linha.append(valor)
-        matriz.append(linha)
-    return matriz
 
-#def k0(matriz):
-    
+age_title = st.title("")
+age = st.slider('', 0, 10)
 
-linhas = int(input("Digite o número de linhas da matriz: "))
-colunas = int(input("Digite o número de colunas da matriz: "))
+side_sist = st.sidebar.radio(
+    ("Selecione o sistema: "),
+    ('Eliminação de Gauss', 'Gauss - Seidel'))
 
-matriz = criar_matriz(linhas, colunas)
+if side_sist == 'Eliminação de Gauss':
+    age_title = st.title("Eliminação de Gauss")
+elif side_sist == 'Gauss - Seidel':
+    age_title = st.title("Gauss - Seidel")   
 
-print("Matriz criada:")
-for linha in matriz:
-    print(linha)
 
+colum = st.columns(age + 1)
+linhas = age
+colunas = age
+matriz = []
+for i in range(linhas):
+    linhas = []
+    for j in range(colunas):
+        valor = st.number_input(f'Valor do {i+1}x{j+1}: ', min_value=1)
+        linhas.append(valor)
+    matriz.append(linhas)
+executar = st.button("Executar ✅")
+
+if executar:
+    df = pd.DataFrame(
+        np.random.randn(valor, colunas),
+        columns=('coluna %d' % i for i in range(age)))
+
+st.dataframe(df)
