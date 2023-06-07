@@ -1,20 +1,33 @@
-linha = int(input('Linhas: '))
-coluna = int(input('Coluna: '))
-matriz = []
-for i in range(linha):
-    linhas = []
-    for j in range(coluna):
-        valor = int(input(f'Valor do {i}x{j}: '))
-        linhas.append(valor)
-    matriz.append(linhas)
+import numpy as np
 
-print('Matriz:')
-for linhas in matriz:
-    print(linhas)
+matrix = int(input("Tamanho da matriz: "))
 
-a1 = matriz
-a1[0][0] = matriz[1][0] / matriz[0][0]
+linhas = []
 
-print(9*'-')
-for linhas in a1:
-    print(linhas)
+for i in range(matrix):
+    linha = []
+    for j in range(matrix + 1):
+        valor = float(input(f'Valor do {i+1}x{j+1}: '))
+        linha.append(valor)
+    linhas.append(linha)
+
+matriz = np.array(linhas, dtype=float)
+
+# Eliminação de Gauss
+for i in range(matrix):
+    if matriz[i, i] == 0:
+        raise ValueError("O pivô não pode ser zero.")
+
+    for j in range(i+1, matrix):
+        ratio = matriz[j, i] / matriz[i, i]
+        matriz[j, i:] -= ratio * matriz[i, i:]
+
+# Obtendo a solução
+solucao = np.zeros(matrix)
+solucao[matrix - 1] = matriz[matrix - 1, matrix] / matriz[matrix - 1, matrix - 1]
+
+for i in range(matrix - 2, -1, -1):
+    solucao[i] = (matriz[i, matrix] - np.dot(matriz[i, i+1:matrix], solucao[i+1:matrix])) / matriz[i, i]
+
+print("Solução:")
+print(solucao)

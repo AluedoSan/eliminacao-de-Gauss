@@ -17,20 +17,43 @@ elif side_sist == 'Gauss - Seidel':
 
 
 colum = st.columns(age + 1)
-linhas = age
-colunas = age
-matriz = []
-for i in range(linhas):
-    linhas = []
-    for j in range(colunas):
-        valor = st.number_input(f'Valor do {i+1}x{j+1}: ', min_value=1)
-        linhas.append(valor)
-    matriz.append(linhas)
+linhas = []
+
+
+for i in range(age):
+    linha = []
+    for j in range(age + 1):
+        valor = st.sidebar.number_input(f'Valor do {i+1}x{j+1}: ', min_value=1)
+        linha.append(valor)
+    linhas.append(linha)
+
+matrix = np.array(linhas, dtype=float)
 executar = st.button("Executar ✅")
 
-if executar:
-    df = pd.DataFrame(
-        np.random.randn(valor, colunas),
-        columns=('coluna %d' % i for i in range(age)))
+if side_sist == 'Eliminação de Gauss':
+    if executar:
+        df = pd.DataFrame(
+            matrix,
+            columns=('coluna %d' % i for i in range(age+1)))
+        st.dataframe(df)
+        for i in range(matrix):
+    if matriz[i, i] == 0:
+        raise ValueError("O pivô não pode ser zero.")
 
-st.dataframe(df)
+    for j in range(i+1, matrix):
+        ratio = matriz[j, i] / matriz[i, i]
+        matriz[j, i:] -= ratio * matriz[i, i:]
+
+# Obtendo a solução
+solucao = np.zeros(matrix)
+solucao[matrix - 1] = matriz[matrix - 1, matrix] / matriz[matrix - 1, matrix - 1]
+
+for i in range(matrix - 2, -1, -1):
+    solucao[i] = (matriz[i, matrix] - np.dot(matriz[i, i+1:matrix], solucao[i+1:matrix])) / matriz[i, i]
+
+elif side_sist == 'Gauss - Seidel':
+    if executar:
+        df = pd.DataFrame(
+            matrix,
+            columns=('coluna %d' % i for i in range(age+1)))
+        st.dataframe(df)
