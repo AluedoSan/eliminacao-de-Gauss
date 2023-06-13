@@ -16,7 +16,12 @@ matriz = np.array(linhas, dtype=float)
 # Eliminação de Gauss
 for i in range(matrix):
     if matriz[i, i] == 0:
-        raise ValueError("O pivô não pode ser zero.")
+        for k in range(i + 1, matrix):
+            if matriz[k, i] != 0:
+                matriz[[i, k]] = matriz[[k, i]]
+                break
+        else:
+            raise ValueError("A matriz não possui solução única.")
 
     for j in range(i+1, matrix):
         ratio = matriz[j, i] / matriz[i, i]
